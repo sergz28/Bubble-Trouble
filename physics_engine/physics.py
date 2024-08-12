@@ -79,7 +79,7 @@ class PhysicsObject():
             # Vertical Velocity
             new_obj.velocity += Vector2D(0, 250)
             new_obj2.velocity += Vector2D(0, 250)
-            del self
+            
 
     def update(self, dt):
         self.position += self.velocity * dt
