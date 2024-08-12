@@ -1,47 +1,46 @@
 import pyglet
-from random import randint
-from physics_engine.physics import Vector2D, PhysicsObject, Gravity, check_collision
+from physics_engine.physics import *
+from pyglet.window import key
 
-window = pyglet.window.Window(800, 600, 'Simple Physics test')
+# Creating a Window Object
+window = pyglet.window.Window()
+WIDTH = window.width
+HEIGHT = window.height
 
-
-# List of balls
+# List for the ball objects
 balls = []
 
-
-# Creating gravity instance
-gravity = Gravity(g=30)
-
-
-ground_y = 50
+# Graphics batch
+batch = pyglet.graphics.Batch()
 
 
-@window.event
-def on_mouse_press(x, y, button, modifiers):
-    new_ball = PhysicsObject(x, y, radius=20, mass=1, color=(randint(0,255), randint(0,255), randint(0,255), 255))
-    balls.append(new_ball)
-
-
-fps_display = pyglet.window.FPSDisplay(window=window)
+# Window events
 
 @window.event
 def on_draw():
     window.clear()
-    fps_display.draw()
+    batch.draw()
+
+@window.event
+def on_mouse_press(x,y, button, modifiers):
     for ball in balls:
-        pyglet.shapes.Circle(int(ball.position.x), int(ball.position.y),
-                              ball.radius, color=ball.color).draw()
+        if ball.on_hit(x,y):
+            ball.on_destroy(balls)
+            break
 
-
-
-
+@window.event
+def on_key_press(symbol, modifiers):
+    if (symbol == key.SPACE):
+        new_ball = PhysicsObject(WIDTH/2, HEIGHT/2, 50, batch=batch)
+        balls.append(new_ball)
 
 def update(dt):
     for ball in balls:
-        gravity.apply(ball)
+        ball.apply_gravity(10)
+        ball.check_collision(0, wall_b=WIDTH)
         ball.update(dt)
-        check_collision(ball, ground_y)
-    
 
-pyglet.clock.schedule_interval(update, 1/60.0)
+    
+pyglet.clock.schedule_interval(update, 1/60)
+
 pyglet.app.run()

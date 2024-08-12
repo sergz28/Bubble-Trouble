@@ -1,22 +1,25 @@
+from pyglet import shapes
+import math
+
+
+# 2D Vector Class
 class Vector2D():
     
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
+    
+    def __add__(self, other):
+        return Vector2D(self.x+other.x, self.y+other.y)
+    
+    def __sub__(self, other):
+        return Vector2D(self.x-other.x, self.y-other.y)
+    
+    def __mul__(self, scalar):
+        return Vector2D(self.x * scalar, self.y * scalar)   
     
     def __str__(self):
         return f'({self.x}, {self.y})'
-
-
-    def __add__(self, other):
-        return Vector2D(self.x + other.x, self.y + other.y)
-
-    def __mul__(self, scalar):
-        return Vector2D(self.x * scalar, self.y * scalar)
-
-    def __sub__(self, other):
-        return Vector2D(self.x - other.x, self.y - other.y)
     
     def length(self):
         return (self.x**2 + self.y**2)**0.5
@@ -24,38 +27,59 @@ class Vector2D():
     def normalize(self):
         length = self.length()
         if length != 0:
-            return Vector2D(self.x/length, self.y/length)
-        
-        return Vector2D(0, 0)
+            return Vector2D(self.x / length, self.y / length)
+        return Vector2D(0,0)
     
+
+
 class PhysicsObject():
-    def __init__(self, x, y, radius, mass=1.0, color=(255,255,255,255)):
+
+    def __init__(self, x, y, radius=0, mass=650, batch=None):
         self.position = Vector2D(x,y)
         self.velocity = Vector2D(0,0)
         self.radius = radius
         self.mass = mass
-        self.restitution = 0.9
-        self.color = color
-    
-    def apply_force(self, force):
-        acceleration = Vector2D(force.x / self.mass, force.y / self.mass)
+        self.batch = batch
+        self.shape = shapes.Circle(x, y, radius, batch=batch)
 
-        self.velocity += acceleration
+    
+    def apply_gravity(self, g):
+        self.velocity.y += -g
+
+    def check_collision(self, ground_y, wall_a=0, wall_b=0):
+        # Ground collision
+        if self.position.y - self.radius <= ground_y:
+            self.position.y = ground_y + self.radius
+            self.velocity.y = 1 * self.mass
+        # Wall collision
+        # Left wall
+        if self.position.x - self.radius <= wall_a:
+            self.velocity.x *= -1
+        elif self.position.x + self.radius >= wall_b:
+            self.velocity.x *= -1
+
+    def on_hit(self, x, y):
+        dist = math.sqrt((self.position.x - x)**2 + (self.position.y - y)**2)
+        return dist <= self.radius
+    
+    def on_destroy(self, balls):
+        if self.radius <= 20:
+            pass
+        else:
+            balls.remove(self)
+            new_obj = PhysicsObject(self.position.x, self.position.y, self.radius - 20, mass=self.mass - 150, batch=self.batch)
+            new_obj2 = PhysicsObject(self.position.x, self.position.y, self.radius - 20, mass=self.mass - 150, batch=self.batch)
+            balls.append(new_obj)
+            balls.append(new_obj2)
+            # Horizontal Velocity
+            new_obj.velocity = Vector2D(-200, 0)
+            new_obj2.velocity = Vector2D(200, 0)
+            # Vertical Velocity
+            new_obj.velocity += Vector2D(0, 250)
+            new_obj2.velocity += Vector2D(0, 250)
+            del self
 
     def update(self, dt):
         self.position += self.velocity * dt
-
-    
-
-class Gravity():
-    def __init__(self, g=9.8):
-        self.gravity = Vector2D(0, -g)
-    def apply(self, obj):
-        obj.apply_force(self.gravity)
-
-    
-
-def check_collision(obj, ground_y):
-    if obj.position.y - obj.radius < ground_y:
-        obj.position.y = ground_y + obj.radius
-        obj.velocity.y *= -obj.restitution 
+        self.shape.x = self.position.x
+        self.shape.y = self.position.y
