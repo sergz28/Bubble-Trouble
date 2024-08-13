@@ -45,7 +45,7 @@ class PhysicsObject():
         self.shape = shapes.Circle(x, y, radius, batch=batch)
 
     
-    def apply_gravity(self, g):
+    def apply_gravity(self, g, dt):
         self.velocity.y += -g
 
     def check_collision(self, ground_y, wall_a=0, wall_b=0):
@@ -66,7 +66,7 @@ class PhysicsObject():
     
     def on_destroy(self, balls):
         if self.radius <= 20:
-            pass
+            balls.remove(self)
         else:
             balls.remove(self)
             new_obj = PhysicsObject(self.position.x, self.position.y, self.radius - 20, mass=self.mass - 150, batch=self.batch)
@@ -74,8 +74,8 @@ class PhysicsObject():
             balls.append(new_obj)
             balls.append(new_obj2)
             # Horizontal Velocity
-            new_obj.velocity = Vector2D(-200, 0)
-            new_obj2.velocity = Vector2D(200, 0)
+            new_obj.velocity += Vector2D(-200, 0)
+            new_obj2.velocity += Vector2D(200, 0) 
             # Vertical Velocity
             new_obj.velocity += Vector2D(0, 250)
             new_obj2.velocity += Vector2D(0, 250)
@@ -83,5 +83,5 @@ class PhysicsObject():
 
     def update(self, dt):
         self.position += self.velocity * dt
-        self.shape.x = self.position.x
-        self.shape.y = self.position.y
+        self.shape.x += self.velocity.x * dt
+        self.shape.y += self.velocity.y * dt  
