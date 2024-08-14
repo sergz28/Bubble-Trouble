@@ -45,7 +45,7 @@ class PhysicsObject():
         self.shape = shapes.Circle(x, y, radius, batch=batch)
 
     
-    def apply_gravity(self, g, dt):
+    def apply_gravity(self, g):
         self.velocity.y += -g
 
     def check_collision(self, ground_y, wall_a=0, wall_b=0):

@@ -43,7 +43,7 @@ class Projectile():
 
 
     def shoot(self, dt):
-        self.velocity = Vector2D(0, 100)
+        self.velocity = Vector2D(0, 800)
         self.shape.y += self.velocity.y * dt
         self.position += self.velocity * dt
 

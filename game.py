@@ -51,7 +51,7 @@ def on_key_press(symbol, modifiers):
         player.move(1, 300)
 
     if (symbol == key.UP):
-        projectile = Projectile(player.position.x+player.player_shape.width/2, player.position.y-1000, 5, 1000, batch=batch)
+        projectile = Projectile(player.position.x+player.player_shape.width/2, player.position.y-600, 6, 600, batch=batch)
 
 
     
@@ -80,7 +80,7 @@ def update(dt):
         player.velocity.x *= -1
         player.update(dt)
     for ball in balls:
-        ball.apply_gravity(10, dt)
+        ball.apply_gravity(10)
         ball.check_collision(0, wall_b=WIDTH)
         ball.update(dt)
     
