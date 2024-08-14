@@ -1,46 +1,45 @@
 import pyglet
-from physics_engine.physics import *
+from classes.player import Player
 from pyglet.window import key
-
-# Creating a Window Object
-window = pyglet.window.Window()
-WIDTH = window.width
-HEIGHT = window.height
-
-# List for the ball objects
-balls = []
-
-# Graphics batch
+from pyglet.math import Vec2
+win = pyglet.window.Window()
 batch = pyglet.graphics.Batch()
 
+# Initialising game variables
 
-# Window events
+# Player
+player = Player(win.width/2, win.height * 0.1, batch=batch)
+player.speed = 300
 
-@window.event
-def on_draw():
-    window.clear()
-    batch.draw()
 
-@window.event
-def on_mouse_press(x,y, button, modifiers):
-    for ball in balls:
-        if ball.on_hit(x,y):
-            ball.on_destroy(balls)
-            break
+if __name__ == '__main__':
+    @win.event
+    def on_draw():
+        win.clear()
+        batch.draw()
 
-@window.event
-def on_key_press(symbol, modifiers):
-    if (symbol == key.SPACE):
-        new_ball = PhysicsObject(WIDTH/2, HEIGHT/2, 50, batch=batch)
-        balls.append(new_ball)
+    @win.event
+    def on_key_press(symbol, modifiers):
+        # Player Movement Handling
+        match symbol:
+            case key.A:
+                    player.move(-1)
+            case key.D:
+                    player.move(1)
+    @win.event
+    def on_key_release(symbol, modifiers):
+        # Player Movement, must make velocity 0 once key is released
+        match symbol:
+            case key.A:
+                player.velocity = Vec2(0,0)
+            case key.D:
+                player.velocity = Vec2(0,0)
 
-def update(dt):
-    for ball in balls:
-        ball.apply_gravity(10)
-        ball.check_collision(0, wall_b=WIDTH)
-        ball.update(dt)
+    def update(dt):
+        player.check_collision(0, win.width)
+        player.update(dt)
 
     
-pyglet.clock.schedule_interval(update, 1/60)
 
-pyglet.app.run()
+    pyglet.clock.schedule_interval(update, 1/60)
+    pyglet.app.run()
