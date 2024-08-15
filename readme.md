@@ -14,4 +14,4 @@ Game starts with one large ball.
 Move around with W-D or Left and Right arrow.
 
 ***You need to install the pyglet library for this to work. Check requirements.txt***
-
+Python 3.12.4
