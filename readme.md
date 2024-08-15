@@ -8,3 +8,9 @@ This remake is created using the pyglet library.
 You can find out more about it here.
 [Pyglet Docs](https://pyglet.readthedocs.io/)
 
+This is a proof of concept. Not a full game, just yet.
+
+Game starts with one large ball.
+Move around with W-D or Left and Right arrow.
+
+***You need to install the pyglet library for this to work. Check requirements.txt***
