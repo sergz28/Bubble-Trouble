@@ -53,8 +53,8 @@ class Ball(PhysicsObject):
             if self.size == key:
                 new_ball = Ball(self.position.x, self.position.y, keys[i-1], batch=self.batch)
                 new_ball2 = Ball(self.position.x, self.position.y, keys[i-1], batch=self.batch)
-                new_ball.velocity = Vec2(200, 150)
-                new_ball2.velocity = Vec2(-200, 150)
+                new_ball.velocity = Vec2(200, 300)
+                new_ball2.velocity = Vec2(-200, 300)
 
                 balls.append(new_ball)
                 balls.append(new_ball2)

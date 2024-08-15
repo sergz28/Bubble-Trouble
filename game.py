@@ -4,7 +4,7 @@ from pyglet.window import key
 from pyglet.math import Vec2
 from classes.ball import Ball, BALL_SIZES
 from classes.harpoon import Harpoon
-win = pyglet.window.Window()
+win = pyglet.window.Window(fullscreen=True)
 batch = pyglet.graphics.Batch()
 
 # Initialising game variables
@@ -13,13 +13,12 @@ batch = pyglet.graphics.Batch()
 player = Player(win.width/2, win.height * 0.1, batch=batch)
 player.speed = 300
 last_input = False
-# Balls
 
+# Balls
 ball_large = Ball(win.width/2, win.height - 50, size="large", batch=batch)
 # ball_medium = Ball(win.width/3, win.height - 50, size="medium", batch=batch)
 # ball_small = Ball(win.width/4, win.height - 50, size="small", batch=batch)
 # ball_extra_small = Ball(win.width/5, win.height - 50, size="extra_small", batch=batch)
-
 balls = [ball_large]
 
 if __name__ == '__main__':
@@ -47,15 +46,18 @@ if __name__ == '__main__':
         # Player Movement, must make velocity 0 once key is released
         match symbol:
             case key.A | key.LEFT:
-                if not last_input:
+                if not last_input: # last_input fixes a little bug with movement. 
                     player.velocity = Vec2(0,0)
             case key.D | key.RIGHT:
-                if last_input:
+                if last_input: # last_input fixes a little bug with movement.
                     player.velocity = Vec2(0,0)
 
     def update(dt):
         player.check_collision(0, win.width)
         player.update(dt)
+        if len(balls) == 0:
+             ball_large = Ball(win.width/2, win.height - 50, size="large", batch=batch)
+             balls.append(ball_large)
         for ball in balls:
              ball.update(dt)
              ball.check_collision(win.height * 0.1, win.width)
