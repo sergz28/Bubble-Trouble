@@ -12,7 +12,7 @@ This is a proof of concept. Not a full game, just yet.
 
 Game starts with one large ball.
 Move around with W-D or Left and Right arrow.
-
+Shoot with SPACE to break up the ball.
 ***You need to install the pyglet library for this to work. Check requirements.txt***
 Python 3.12.4
 
