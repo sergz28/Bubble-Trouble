@@ -15,7 +15,10 @@ Game starts with one large ball.
 **CONTROLS**
 
 Move around with W-D or Left and Right arrow.
+
 Shoot with SPACE to break up the ball.
+
+
 
 *You need to install the pyglet library for this to work. Check requirements.txt*
 
