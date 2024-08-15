@@ -11,6 +11,7 @@ You can find out more about it here.
 This is a proof of concept. Not a full game, just yet.
 
 Game starts with one large ball.
+**CONTROLS**
 Move around with W-D or Left and Right arrow.
 Shoot with SPACE to break up the ball.
 
