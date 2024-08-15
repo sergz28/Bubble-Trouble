@@ -15,3 +15,12 @@ Move around with W-D or Left and Right arrow.
 
 ***You need to install the pyglet library for this to work. Check requirements.txt***
 Python 3.12.4
+
+
+### To-do List
+- Player collision with balls
+- Create levels
+- Expand on Player class, lives, points, etc
+- Main menu
+- Create player sprite
+- Implement a way to display different scenes, i.e. game-over, main menu, pause.
