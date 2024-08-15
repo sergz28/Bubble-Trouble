@@ -1,7 +1,7 @@
 from pyglet.math import Vec2
 from pyglet import shapes
 from pyglet.window import key
-
+from classes.harpoon import Harpoon
 class Player():
 
     def __init__(self, pos_x, pos_y, batch=None):
@@ -9,15 +9,26 @@ class Player():
         self.velocity = Vec2(0.0,0.0)
         self.width = 21
         self.height = 50
-        self.batch = None
+        self.batch = batch
         self.speed = 10
         self.shape = shapes.Rectangle(pos_x, pos_y, self.width, self.height, (255, 0, 191), batch=batch)
-        
+        self.harpoon = None
+
+
+    def deploy_harpoon(self):
+        if self.harpoon is None or self.harpoon.is_finished():
+            self.harpoon = Harpoon(self.position.x+self.width/2, self.position.y, batch=self.batch)
+    
 
     def update(self, dt):
         self.position += self.velocity * dt
         self.shape.x = self.position.x
         self.shape.y = self.position.y  
+
+        if self.harpoon:
+            self.harpoon.update(dt)
+            if self.harpoon.is_finished():
+                self.harpoon = None
 
 
 
@@ -35,3 +46,5 @@ class Player():
     
     def move(self, direction):
         self.velocity = Vec2(direction * self.speed, 0) 
+
+    
